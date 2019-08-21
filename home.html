@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <style type="text/css">
+    body{
+    background-color: #1d1616;
+    color: white;
+  }
+  #top{
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 300%;
+  }
+  .list{
+    color: white;
+    margin: 0 -5px;
+    align-content: center;
+  }
+  
+  .list:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  .column{
+    float: left;
+    width: 23.9%;
+    padding: 10px;
+  }
+  
+  #img- {
+    padding: 0px;
+    width: 300px;
+    height: 350px;
+  }
+  
+  .name{
+    text-align-last: right
+  }
+  
+  .middle{
+    padding: 20px;
+    align-content: center
+  }
+  
+  #detailsImg{
+    width: 400px;
+    height: 600px;
+    float: left;
+    padding: 20px;
+  }
+  
+  #title{
+    display: inline-block;
+    font-size: 250%;
+    padding: 0%;
+    margin-bottom: 0%;
+    margin-left: 150px
+  }
+  
+  #score{
+    color: darkgreen
+  }
+  
+  #overview{
+    font-size: 110%;
+    max-width: 1000px;
+  }
+    </style>
+    <title>forkify // Search over 1,000,000 recipes</title>
+</head>
+
+<body>
+    <main>
+        <section class="top">
+            <h1 id="top">MovieBase</h1>        
+        </section>
+
+        <section class="middle">
+
+            <div class="list"> </div>
+
+        </section>
+    </main>
+
+    <script>
+        const key = '69058331fe295fbe92db92d040420904';
+        const image = "https://image.tmdb.org/t/p/w342/";
+
+        async function getTrending() {
+            const trending = await fetch (`https://api.themoviedb.org/3/trending/movie/week?api_key=${key}`);
+            let   movieLists = await trending.json();
+            let movieList = movieLists.results;
+
+            for(let i=0; i<movieList.length; i++){
+                let movieImage, movieScore, movieTitle, HTML, newHTML;
+                movieTitle = movieList[i].title;
+                movieScore = movieList[i].vote_average;
+                movieImage = movieList[i].poster_path;
+                HTML = '<div class="column"><div > <img class="image" id="img-%img%" src=""></div> <div class="name-%name%" > %movie name% </div><div class="scr-%scr%"> %score%</div></div>';
+                
+                newHTML = HTML.replace('%img%' , i);
+                newHTML = newHTML.replace('%name%' , i);
+                newHTML = newHTML.replace('%scr%' , i);
+
+                document.querySelector('.list').insertAdjacentHTML('beforeend', newHTML);
+                document.querySelector(`.scr-${i}`).textContent = `Score - ${movieScore}`;
+                document.getElementById(`img-${i}`).src = `${image}${movieImage}` ;
+                document.querySelector(`.name-${i}`).textContent =`${movieTitle}`;     
+            } 
+
+            document.querySelector('.list').addEventListener('click', function(){
+            
+                let imgID = event.target.id;
+                if(imgID){
+                    let splitID, index, ID, element;
+                    splitID = imgID.split('-');
+                    index = splitID[1]
+                    
+                    ID = movieList[index].id;
+
+                    location.assign(ID)
+               };
+            })  
+        }
+
+        getTrending();
+    </script>
+</body>
+
+</html>
